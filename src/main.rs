@@ -1,12 +1,17 @@
 // Modules
 mod decode;
+mod process;
 
+use process::process_signal;
 // Imports
 use tinyaudio::prelude::*;
 
 fn main() -> eyre::Result<()> {
     let filepath = "./samples/2.mp3";
     let (sample_rate, raw) = decode::decode_file(filepath)?;
+    let r = raw.clone();
+
+    let (left, right, delay) = process_signal(raw, sample_rate)?;
 
     let params = OutputDeviceParameters {
         channels_count: 2,
@@ -15,20 +20,19 @@ fn main() -> eyre::Result<()> {
     };
 
     let _device = run_output_device(params, {
-        let mut index: usize = 0;
-        let mut rand: f32 = 0.0;
+        let mut idx: usize = 0;
         move |data| {
             for samples in data.chunks_mut(params.channels_count) {
-                rand = (index as u32 % sample_rate) as f32 / sample_rate as f32;
-                if rand < 0.4 {
-                    rand = 0.4
-                }
-                if rand > 0.6 {
-                    rand = 0.6
-                }
-                samples[0] = (1.0 - rand) * raw[index];
-                samples[1] = rand * raw[index];
-                index += 1;
+                let lidx = idx as i32 - delay[idx];
+                let l = if lidx < 0 {
+                    0.0_f32
+                } else {
+                    left[lidx as usize]
+                };
+
+                samples[0] = l;
+                samples[1] = right[idx];
+                idx += 1;
             }
         }
     })

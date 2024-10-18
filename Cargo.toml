@@ -4,8 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-dasp = { version = "^0.11" }
+angle-sc = { version = "^0.3" }
+dasp = { version = "^0.11", features = ["signal"] }
 eyre = { version = "^0.6" }
+itertools = { version = "^0.13" }
 symphonia = { version = "^0.5", features = ["mp3"] }
 tinyaudio = { version = "^1.0" }
 
