@@ -1,16 +1,15 @@
 // Modules
 mod decode;
+mod math;
 mod process;
 
-use process::process_signal;
 // Imports
+use process::process_signal;
 use tinyaudio::prelude::*;
 
 fn main() -> eyre::Result<()> {
-    let filepath = "./samples/2.mp3";
+    let filepath = "./samples/4.mp3";
     let (sample_rate, raw) = decode::decode_file(filepath)?;
-    let r = raw.clone();
-
     let (left, right, delay) = process_signal(raw, sample_rate)?;
 
     let params = OutputDeviceParameters {
@@ -38,7 +37,7 @@ fn main() -> eyre::Result<()> {
     })
     .unwrap();
 
-    std::thread::sleep(std::time::Duration::from_secs(200));
+    std::thread::sleep(std::time::Duration::from_secs(500));
 
     Ok(())
 }

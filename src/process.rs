@@ -14,9 +14,9 @@ pub fn process_signal(
     raw_signal: Vec<f32>,
     sample_rate: u32,
 ) -> eyre::Result<(Vec<f32>, Vec<f32>, Vec<i32>)> {
-    let mut sound_source = Coord2D::new(3.0, PI / 2.0);
-    let left = Coord2D::new(0.8, PI);
-    let right = Coord2D::new(0.8, 0.0);
+    let mut sound_source = Coord2D::new(1.4, PI / 2.2);
+    let left = Coord2D::new(0.4, PI);
+    let right = Coord2D::new(0.4, 0.0);
 
     let period: f64 = 5.0;
     let radial_pulse = 2.0 * PI / period;
